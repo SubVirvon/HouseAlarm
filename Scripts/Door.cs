@@ -18,10 +18,7 @@ public class Door : MonoBehaviour, IPointerClickHandler
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        if (_isCharacterInside)
-            _isCharacterInside = false;
-        else
-            _isCharacterInside = true;
+        _isCharacterInside = !_isCharacterInside;
 
         _clicked?.Invoke(_isCharacterInside);
     }
