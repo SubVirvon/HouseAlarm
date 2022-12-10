@@ -25,8 +25,6 @@ public class House : MonoBehaviour
 
     private void OnDoorClicked(bool isCharacterInside)
     {
-        
-
         if (isCharacterInside)
         {
             _houseBack.SetActive(true);

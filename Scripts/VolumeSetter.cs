@@ -22,14 +22,6 @@ public class VolumeSetter : MonoBehaviour
         _source = GetComponent<AudioSource>();
     }
 
-    public void Set(bool isCharacterInside)
-    {
-        _isCharacterInside = isCharacterInside;
-        
-        if(_isCoroutinStart == false)
-            _changeVolume = StartCoroutine(ChangeVolume());
-    }
-
     private IEnumerator ChangeVolume()
     {
         var waitForStep = new WaitForSeconds(_changeStep * _duration);
@@ -40,7 +32,7 @@ public class VolumeSetter : MonoBehaviour
         if (_volume <= 0)
             _source.Play();
 
-        while(isFinish == false)
+        while (isFinish == false)
         {
             if (_isCharacterInside)
                 _volume += _changeStep;
@@ -53,7 +45,7 @@ public class VolumeSetter : MonoBehaviour
             {
                 StopCoroutine(_changeVolume);
             }
-            else if(_volume <= 0)
+            else if (_volume <= 0)
             {
                 StopCoroutine(_changeVolume);
                 _source.Stop();
@@ -61,6 +53,14 @@ public class VolumeSetter : MonoBehaviour
 
             yield return waitForStep;
         }
+    }
+
+    public void SetVolume(bool isCharacterInside)
+    {
+        _isCharacterInside = isCharacterInside;
+        
+        if(_isCoroutinStart == false)
+            _changeVolume = StartCoroutine(ChangeVolume());
     }
 
     private void StopCoroutine(int coroutineName)

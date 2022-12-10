@@ -6,15 +6,15 @@ using UnityEngine.EventSystems;
 
 public class Door : MonoBehaviour, IPointerClickHandler
 {
+    [SerializeField] private UnityEvent<bool> _clicked;
+
+    private bool _isCharacterInside = false;
+
     public event UnityAction<bool> Clicked
     {
         add => _clicked.AddListener(value);
         remove => _clicked.RemoveListener(value);
     }
-
-    [SerializeField] private UnityEvent<bool> _clicked;
-
-    private bool _isCharacterInside = false;
 
     public void OnPointerClick(PointerEventData eventData)
     {
