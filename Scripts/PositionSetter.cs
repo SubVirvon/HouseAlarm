@@ -15,7 +15,7 @@ public class PositionSetter : MonoBehaviour
         _characterRenderer = _character.GetComponent<Renderer>();
     }
 
-    public void Set(bool isCharacterInside)
+    public void SetPosition(bool isCharacterInside)
     {
         _character.transform.position = _position;
 
