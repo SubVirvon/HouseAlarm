@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(AudioSource))]
-public class VolumeSetter : MonoBehaviour
+public class Alarm : MonoBehaviour
 {
     [SerializeField] private float _duration;
     [SerializeField] private float _changeStep;
