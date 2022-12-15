@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using Unity.VisualScripting;
 using UnityEditor.SceneTemplate;
 using UnityEngine;
 using UnityEngine.UI;
@@ -9,63 +10,43 @@ using UnityEngine.UI;
 public class Alarm : MonoBehaviour
 {
     [SerializeField] private float _duration;
-    [SerializeField] private float _changeStep;
 
-    private float _volume;
     private AudioSource _source;
-    private bool _isCharacterInside;
     private Coroutine _changeVolume;
-    private bool _isCoroutinStart = false;
 
     private void Awake()
     {
         _source = GetComponent<AudioSource>();
     }
 
-    private IEnumerator ChangeVolume()
-    {
-        var waitForStep = new WaitForSeconds(_changeStep * _duration);
-        bool isFinish = false;
-
-        _isCoroutinStart = true;
-
-        if (_volume <= 0)
-            _source.Play();
-
-        while (isFinish == false)
-        {
-            if (_isCharacterInside)
-                _volume += _changeStep;
-            else
-                _volume -= _changeStep;
-
-            _source.volume = _volume;
-
-            if (_volume >= 1)
-            {
-                StopCoroutine(_changeVolume);
-            }
-            else if (_volume <= 0)
-            {
-                StopCoroutine(_changeVolume);
-                _source.Stop();
-            }
-
-            yield return waitForStep;
-        }
-    }
-
     public void SetVolume(bool isCharacterInside)
     {
-        _isCharacterInside = isCharacterInside;
-        
-        if(_isCoroutinStart == false)
-            _changeVolume = StartCoroutine(ChangeVolume());
+        float targetVolume;
+
+        if (isCharacterInside)
+            targetVolume = 1;
+        else
+            targetVolume = 0;
+            
+        if (_changeVolume != null)
+            StopCoroutine(_changeVolume);
+
+        _changeVolume = StartCoroutine(ChangeVolume(targetVolume));
     }
 
-    private void StopCoroutine(int coroutineName)
+    private IEnumerator ChangeVolume(float targetVolume)
     {
-        _isCoroutinStart = false;
-        StopCoroutine(coroutineName);
+        if (_source.volume == 0)
+            _source.Play();
+
+        while (_source.volume != targetVolume)
+        {
+            _source.volume = Mathf.MoveTowards(_source.volume, targetVolume, Time.deltaTime / _duration);
+
+            yield return null;
+        }
+
+        if (_source.volume == 0)
+            _source.Stop();
     }
 }
